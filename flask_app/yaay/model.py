@@ -44,37 +44,33 @@ class Task(db.Model):
 
     # Fields
     answer = db.Column('answer', db.String(), nullable=False)
+    title = db.Column('title', db.String(), nullable=False)
 
     # Relationships
-    users = db.relationship('User')
-    tasks_users = db.relationship('TaskUser')
-    event_tasks = db.relationship('EventTask')
+    users = db.relationship('UserTask')
+    events = db.relationship('EventTask')
 
 
-class EventUser(db.Model):
+class UserTask(db.Model):
+    __tablename__ = 'user_task'
+
+    # Foreign + primary keys
+    user_id = db.Column('user_id', db.String(),
+                        db.ForeignKey('user.token'), primary_key=True)
+    task_id = db.Column('task_id', db.String(), db.ForeignKey('task.filename'), primary_key=True)
+
+    # Relationships
+    user = db.relationship('User', back_populates='tasks')
+    task = db.relationship('Task', back_populates='users')
+
+
+class EventTask(db.Model):
     __tablename__ = 'event_task'
 
-    id = db.Column('id', db.BigInteger(), primary_key=True)
-
-    # Foreign keys
-    user_id = db.Column('user_id', db.BigInteger(),
-                        db.ForeignKey('user.id'), nullable=False)
-    active_task_id = db.Column('active_task_id', db.String(), db.ForeignKey('task.filename'), nullable=False)
+    # Foreign + primary keys
+    event_id = db.Column('event_id', db.BigInteger(), db.ForeignKey('event.id'), primary_key=True)
+    task_id = db.Column('task_id', db.String(), db.ForeignKey('task.filename'), primary_key=True)
 
     # Relationships
-    users = db.relationship('User', back_populates='users')
-    tasks = db.relationship('Task', back_populates='tasks')
-
-
-class TaskUser(db.Model):
-    __tablename__ = 'task_user'
-
-    id = db.Column('id', db.BigInteger(), primary_key=True)
-
-    # Foreign keys
-    event_id = db.Column('event_id', db.BigInteger(), db.ForeignKey('event.id'), nullable=False)
-    task_id = db.Column('task_id', db.String(), db.ForeignKey('task.filename'), nullable=False)
-
-    # Relationships
-    event = db.relationship('User', back_populates='users')
-    tasks = db.relationship('Task', back_populates='tasks')
+    event = db.relationship('Event', back_populates='tasks')
+    task = db.relationship('Task', back_populates='events')

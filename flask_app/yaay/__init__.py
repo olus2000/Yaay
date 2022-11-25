@@ -7,8 +7,7 @@ from flask_sqlalchemy import SQLAlchemy
 
 from yaay import api
 from yaay.db import db
-# from yaay.model import model, stuff
-# from yaay.cli import cli, stuff
+from yaay.cli import init_db
 
 
 def create_app(test_config=None):
@@ -40,7 +39,7 @@ def create_app(test_config=None):
     app.register_blueprint(api.bp)
 
     # commandline interface
-    # app.cli.add_command(command)
+    app.cli.add_command(init_db)
 
     return app
 
