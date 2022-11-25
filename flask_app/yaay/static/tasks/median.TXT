@@ -1,0 +1,5 @@
+You have given two arrays:
+[3**x for x in range(8)]
+[x*y for x in range(4, 12) for y in range(8, 16)]
+
+You have to calculate the product of mean and median of cancatenation of these two arrays.

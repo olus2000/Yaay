@@ -1,0 +1,5 @@
+Calculate:
+fib(2137)%10000007
+Where fib() is given fibonacci number.
+
+answer: 68245678

@@ -1,0 +1,2 @@
+Calculate sum of three numbers in binary numeric system:
+10001101101011101 + 100001011001 + 1010001100010100010010011
