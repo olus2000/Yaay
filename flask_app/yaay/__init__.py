@@ -5,12 +5,15 @@ import re
 from flask import Flask, render_template
 from flask_sqlalchemy import SQLAlchemy
 
-# from yaay import names, of, blueprints
+from yaay import api
+from yaay.db import db
 # from yaay.model import model, stuff
 # from yaay.cli import cli, stuff
 
 
 def create_app(test_config=None):
+    global db
+
     app = Flask(__name__, instance_relative_config=True)
 
 
@@ -34,10 +37,7 @@ def create_app(test_config=None):
         return 'Henlo ,warld!'
 
     # pages
-    # app.register_blueprint(some.bp)
-
-    # model
-    # ap.register_blueprint(some.bp)
+    app.register_blueprint(api.bp)
 
     # commandline interface
     # app.cli.add_command(command)
