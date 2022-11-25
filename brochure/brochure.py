@@ -1,11 +1,12 @@
-import PIL
-from PIL import Image
 import qrcode
+import argparse
+from PIL import Image
 from qrcode.image.styles.colormasks import HorizontalGradiantColorMask
 from qrcode.image.styledpil import StyledPilImage
 
 COLOR_GS = (116, 154, 199)
 COLOR_RIGHT = (9, 96, 155)
+IMAGE_FOLDER_PATH = '../images/'
 IMAGE_PATH = '../images/brochure_template.png'
 
 QR = qrcode.QRCode(
@@ -30,8 +31,12 @@ def create_brochure(qr_img):
         img_w, img_h = img.size
         qr_w, qr_h = qr_img.size
         img.paste(qr_img, (img_w - qr_w - 150, img_h - qr_h - 100))
-        img.save('brochure.png')
+        img.save(IMAGE_FOLDER_PATH + 'brochure.png')
+        return img
 
 
 if __name__ == "__main__":
-    create_brochure(create_qr('asdfasf'))
+    parser = argparse.ArgumentParser()
+    parser.add_argument('-t', '--text', type=str)
+    args = parser.parse_args()
+    create_brochure(create_qr(args.text))
