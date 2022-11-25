@@ -8,7 +8,7 @@ class Event(db.Model):
 
     # Fields
     info = db.Column('info', db.String(), nullable=False)
-    stage_amount = db.column('stage_amount', db.Integer(), nullable=False)
+    stage_amount = db.Column('stage_amount', db.Integer(), nullable=False)
 
     # Relationships
     users = db.relationship('User')
@@ -21,8 +21,10 @@ class User(db.Model):
     token = db.Column('token', db.String(), primary_key=True)
 
     # Foreign keys
-    event_id = db.Column('event_id', db.BigInteger(), db.ForeignKey('event.id'), nullable=False)
-    active_task_id = db.Column('active_task', db.String(), db.ForeignKey('task.id'))
+    event_id = db.Column('event_id', db.BigInteger(),
+                         db.ForeignKey('event.id'), nullable=False)
+    active_task_id = db.Column('active_task_id', db.String(
+    ), db.ForeignKey('task.filename'), nullable=False)
 
     # Fields
     stage = db.Column('stage', db.Integer(), default=1)
@@ -40,9 +42,39 @@ class Task(db.Model):
 
     filename = db.Column('filename', db.String(), primary_key=True)
 
-    # Fields 
+    # Fields
     answer = db.Column('answer', db.String(), nullable=False)
 
     # Relationships
+    users = db.relationship('User')
+    tasks_users = db.relationship('TaskUser')
+    event_tasks = db.relationship('EventTask')
 
 
+class EventUser(db.Model):
+    __tablename__ = 'event_task'
+
+    id = db.Column('id', db.BigInteger(), primary_key=True)
+
+    # Foreign keys
+    user_id = db.Column('user_id', db.BigInteger(),
+                        db.ForeignKey('user.id'), nullable=False)
+    active_task_id = db.Column('active_task_id', db.String(), db.ForeignKey('task.filename'), nullable=False)
+
+    # Relationships
+    users = db.relationship('User', back_populates='users')
+    tasks = db.relationship('Task', back_populates='tasks')
+
+
+class TaskUser(db.Model):
+    __tablename__ = 'task_user'
+
+    id = db.Column('id', db.BigInteger(), primary_key=True)
+
+    # Foreign keys
+    event_id = db.Column('event_id', db.BigInteger(), db.ForeignKey('event.id'), nullable=False)
+    task_id = db.Column('task_id', db.String(), db.ForeignKey('task.filename'), nullable=False)
+
+    # Relationships
+    event = db.relationship('User', back_populates='users')
+    tasks = db.relationship('Task', back_populates='tasks')
