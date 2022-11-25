@@ -22,7 +22,6 @@ def create_qr(text, qr_settings=QR):
     qr_settings.make(fit=True)
     img = qr_settings.make_image(image_factory=StyledPilImage,
                                  color_mask=HorizontalGradiantColorMask(right_color=COLOR_RIGHT))
-    # img.save('zzz.png')
     return img
 
 
