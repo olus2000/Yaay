@@ -23,7 +23,10 @@ def create_app(test_config=None):
     if test_config is not None:
         app.config.config_mapping(test_config)
 
-    # database connection TODO
+    # database connection
+    app.config['SQLALCHEMY_DATABASE_URI'] = app.config['SQLALCHEMY_DATABASE_URI'] \
+            .format(instance=app.instance_path)
+    db.init_app(app)
 
     # simple page
     @app.route('/hello')
