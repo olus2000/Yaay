@@ -67,20 +67,12 @@ def add_task(filename, title, answer):
 @click.option('--event-id', required=True, type=int)
 @with_appcontext
 def add_task_to_event(filename, event_id):
-    tasks = Task.query.all()
-    events = Event.query.all()
-    found = False
-    for task in tasks:
-        if task.filename == filename:
-            found = True
-    if not found:
+    task = Task.query.filetr(Task.filename == filename).one_or_none()
+    event = Event.query.filter(Event.id == event_id).one_or_none()
+    if task is None:
         print("Task not found")
         return
-    found = False
-    for event in events:
-        if event.id == event_id:
-            found = True
-    if not found:
+    if event is None:
         print("Event not found")
         return
     task_to_event = EventTask(event_id=event_id, task_id=filename)

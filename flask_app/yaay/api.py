@@ -20,7 +20,7 @@ def start(event_id):
     token = token_hex(16)
     tasks = Task.query.join(EventTask).join(Event).filter(Event.id == event_id).all()
     task_filename = choice(tasks).filename
-    if not Event.query.filter_by(id=event_id).first():
+    if Event.query.filter_by(id=event_id).one_or_none() is None:
         return create_response('wrong event')
     user = User(token=token, event_id=event_id, active_task_id=task_filename)
     user_task = UserTask(user_id=token, task_id=task_filename)
@@ -33,22 +33,22 @@ def start(event_id):
 
 @bp.route('/task/<string:token>')
 def task(token):
-    user = User.query.filter_by(token=token).first()
-    if not user:
+    user = User.query.filter_by(token=token).one_or_none()
+    if user is None:
         return create_response('ERROR')
     task = Task.query.filter_by(filename=user.active_task_id).first()
     with open('yaay/static/tasks/' + task.filename) as f:
         question = f.readlines()
     
-    num_of_tasks = Event.query.filter_by(id=user.event_id).first().stage_amount
+    event = Event.query.filter_by(id=user.event_id).one()
     
     return create_response({
         'task': question,
         'title': task.title,
         'try_num': user.try_number,
-        'max_tries': user.max_tries,
+        'max_tries': event.max_tries,
         'task_number': user.stage,
-        'max_task_number': num_of_tasks,
+        'max_task_number': event.stage_amount,
         'is_finished': user.is_finished
     })
 
@@ -57,11 +57,14 @@ def task(token):
 def check(token):
     user = User.query.filter_by(token=token).first()
     task = Task.query.filter_by(filename=user.active_task_id).first()
-    num_of_tasks = Event.query.filter_by(id=user.event_id).first().stage_amount
+    event = Event.query.filter_by(id=user.event_id).first()
     answer = list(request.form.keys())[0]
+
+    if user.try_number > event.max_tries:
+        return create_response(0)
     
-    # print(f'{user.stage=}, {num_of_tasks=}')
-    if answer == task.answer and user.stage == num_of_tasks:
+    # print(f'{user.stage=}, {event.stage_amount=}')
+    if answer == task.answer and user.stage == event.stage_amount:
         user.is_finished = True
         db.session.commit()
         return create_response(2)
@@ -91,7 +94,7 @@ def check(token):
 
 @bp.route('/end/<string:token>')
 def end(token):
-    ''' bierze token, daje content eventu i coś tam jeszcze nie wiem w sumie '''
+    ''' bierze token, daje content eventu '''
     user = User.query.filter_by(token=token).first()
     if not user.is_finished:
         return create_response('error')
