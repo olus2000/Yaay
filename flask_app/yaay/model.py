@@ -81,3 +81,12 @@ class EventTask(db.Model):
     # Relationships
     event = db.relationship('Event', back_populates='tasks')
     task = db.relationship('Task', back_populates='events')
+
+
+class Survey(db.Model):
+    __tablename__ = 'survey'
+
+    user_token = db.Column('user_token', db.String(), db.ForeignKey('user.token'), primary_key=True)
+    gender = db.Column('gender', db.Integer(), nullable=False)
+    age = db.Column('age', db.Integer(), nullable=False)
+    education = db.Column('education', db.String(), nullable=False)
