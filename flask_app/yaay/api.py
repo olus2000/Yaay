@@ -1,6 +1,6 @@
 from flask import Blueprint, current_app, request
 from flask.json import jsonify
-from sqlalchemy.sql.expression import exists
+from sqlalchemy.sql.expression import exists, and_
 
 from yaay.db import db
 from yaay.model import Event, User, Task, UserTask, EventTask, Survey
@@ -76,7 +76,7 @@ def check(token):
         user.stage += 1
 
         viable_tasks = Task.query.join(EventTask).join(Event).filter(Event.id == event.id) \
-                .filter(~exists().where(UserTask.task_id == Task.filename)).all()
+                .filter(~exists().where(and_(UserTask.user_id == token, UserTask.task_id == Task.filename))).all()
         new_task = choice(viable_tasks)
         user.active_task_id = new_task.filename
         user_task = UserTask(user_id=token, task_id=new_task.filename)
