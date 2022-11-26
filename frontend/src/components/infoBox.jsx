@@ -15,7 +15,6 @@ const StyledBox = styled.div`
   
   justify-content: space-evenly;
   
-  border-radius: 10px;
   border: 2px dashed black;
   
   .customText {

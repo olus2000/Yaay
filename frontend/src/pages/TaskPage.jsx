@@ -32,6 +32,16 @@ export const TaskPage = () => {
 
   React.useEffect(() => {
     data === null && handleTaskGet(setData, userId)
+    const keyDownHandler = event => {
+      if (event.key === 'Enter') {
+        handleSubmitAnswer()
+      }
+    }
+    document.addEventListener('keydown', keyDownHandler)
+
+    return () => {
+      document.removeEventListener('keydown', keyDownHandler)
+    }
   })
 
   const handleChange = (event) => {

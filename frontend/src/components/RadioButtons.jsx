@@ -11,12 +11,12 @@ display: flex;
   
 `
 
-export const RadioButtons = ({data, name, smol=false}) => {
+export const RadioButtons = ({data, name, handler, smol=false}) => {
   return(
       <StyledRadios>
         {data.map((e) => (
             <div style={{display: "flex", width: `${smol ? '30%' : '80%'}`, justifyContent: 'flex-start'}}>
-              <input type='radio' value={e} name={name} style={{marginRight: 20}} className={'radioButton'}/>
+              <input type='radio' value={e} name={name} style={{marginRight: 20}} className={'radioButton'} onClick={() => handler(e)}/>
               <p> {e} </p>
             </div>
         ))}

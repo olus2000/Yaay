@@ -72,7 +72,7 @@ export const EndPage = () => {
   if (data !== null)
   return(
       <PageWrapper>
-        <Survey />
+        <Survey userId={userId}/>
         <Header title={'Congratulations!'} />
         <Task content={data} />
         <Task content={explain} />

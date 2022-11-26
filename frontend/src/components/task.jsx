@@ -5,7 +5,7 @@ const StyledTask = styled.div`
   margin-left: 20px;
   margin-top: 40px;
   
-  max-width: 900px;
+  max-width: 600px;
   
   content: {
     font-size: 14px;
