@@ -9,6 +9,10 @@ from random import choice
 
 bp = Blueprint('api', __name__, url_prefix='/api')
 
+def create_response(text):
+    response = jsonify('')
+    response.headers.add('Access-Control-Allow-Origin', '*')
+    return response.add(jsonify(text))
 
 @bp.route('/start/<string:event_id>')
 def start(event_id):
@@ -27,25 +31,21 @@ def start(event_id):
     db.session.add(user)
     db.session.add(user_task)
     db.session.commit()
-    response = jsonify(token)
-    response.headers.add('Access-Control-Allow-Origin', '*')
-    return response
+    return create_response(token)
 
 
 @bp.route('/task/<string:token>')
 def task(token):
     user = User.query.filter_by(token=token).first()
     if not user:
-        response = jsonify('ERROR')
-        response.headers.add('Access-Control-Allow-Origin', '*')
-        return response
+        return create_response('ERROR')
     task = Task.query.filter_by(filename=user.active_task_id).first()
     with open('yaay/static/tasks/' + task.filename) as f:
         question = f.readlines()
     
     num_of_tasks = Event.query.filter_by(id=user.event_id).first().stage_amount
     
-    response = jsonify({
+    return create_response({
         'task': question,
         'title': task.title,
         'try_num': user.try_number,
@@ -54,8 +54,6 @@ def task(token):
         'max_task_number': num_of_tasks,
         'is_finished': user.is_finished
     })
-    response.headers.add('Access-Control-Allow-Origin', '*')
-    return response
 
 
 @bp.route('/check/<string:token>', methods=['POST'])
@@ -69,9 +67,7 @@ def check(token):
     if answer == task.answer and user.stage == num_of_tasks:
         user.is_finished = True
         db.session.commit()
-        response = jsonify(2)
-        response.headers.add('Access-Control-Allow-Origin', '*')
-        return response
+        return create_response(2)
 
     if answer == task.answer:
         user.try_number = 1
@@ -84,21 +80,15 @@ def check(token):
         user_task = UserTask(user_id=token, task_id=new_task.filename)
         db.session.add(user_task)
         db.session.commit()
-        response = jsonify(1)
-        response.headers.add('Access-Control-Allow-Origin', '*')
-        return response
+        return create_response(1)
 
 
     user.try_number += 1
     db.session.commit()
     if user.try_number > user.max_tries:
-        response = jsonify(0)
-        response.headers.add('Access-Control-Allow-Origin', '*')
-        return response
+        return create_response(0)
     
-    response = jsonify(1)
-    response.headers.add('Access-Control-Allow-Origin', '*')
-    return response
+    return create_response(1)
     
 
 
@@ -107,10 +97,6 @@ def end(token):
     ''' bierze token, daje content eventu i coś tam jeszcze nie wiem w sumie '''
     user = User.query.filter_by(token=token).first()
     if not user.is_finished:
-        response = jsonify('error')
-        response.headers.add('Access-Control-Allow-Origin', '*')
-        return response
+        return create_response('error')
     event = Event.query.filter_by(id=user.event_id).first()
-    response = jsonify(event.info)
-    response.headers.add('Access-Control-Allow-Origin', '*')
-    return response
+    return create_response(event.info)
