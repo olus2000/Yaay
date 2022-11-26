@@ -12,7 +12,7 @@ bp = Blueprint('api', __name__, url_prefix='/api')
 
 def create_response(text):
     response = jsonify(text)
-    response.headers.add('Access-Control-Allow-Origin', '*')
+    # response.headers.add('Access-Control-Allow-Origin', '*')
     return response
 
 @bp.route('/start/<string:event_id>')

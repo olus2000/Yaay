@@ -45,6 +45,10 @@ def create_app(test_config=None):
     app.cli.add_command(add_task_to_event)
     app.cli.add_command(show)
 
+    @app.after_request
+    def handle_CORS(response):
+        response.headers['Access-Control-Allow-Origin'] = '*'
+
     return app
 
 
