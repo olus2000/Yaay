@@ -113,7 +113,7 @@ def survey(token):
                 gender=request.form['gender'],
                 education=request.form['education'],
         )
-        db.session.add(new_survey)
+        db.session.add(survey)
     else:
         survey.update(dict(request.form))
 
