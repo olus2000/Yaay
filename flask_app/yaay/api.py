@@ -2,7 +2,7 @@ from flask import Blueprint, current_app, request
 from flask.json import jsonify
 
 from yaay.db import db
-from yaay.model import Event, User, Task, UserTask
+from yaay.model import Event, User, Task, UserTask, EventTask
 
 from secrets import token_hex
 from random import choice
@@ -18,7 +18,7 @@ def create_response(text):
 def start(event_id):
     ''' generates user token '''
     token = token_hex(16)
-    tasks = Task.query.all()
+    tasks = Task.query.join(EventTask).join(Event).filter(Event.id == event_id).all()
     task_filename = choice(tasks).filename
     if not Event.query.filter_by(id=event_id).first():
         return create_response('wrong event')
