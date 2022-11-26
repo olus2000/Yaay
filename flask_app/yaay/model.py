@@ -57,11 +57,12 @@ class Task(db.Model):
 
 class UserTask(db.Model):
     __tablename__ = 'user_task'
+    
+    user_task_id = db.Column('user_task_id', db.Integer(), primary_key=True)
 
     # Foreign + primary keys
-    user_id = db.Column('user_id', db.String(),
-                        db.ForeignKey('user.token'), primary_key=True)
-    task_id = db.Column('task_id', db.String(), db.ForeignKey('task.filename'), primary_key=True)
+    user_id = db.Column('user_id', db.String(), db.ForeignKey('user.token'))
+    task_id = db.Column('task_id', db.String(), db.ForeignKey('task.filename'))
 
     # Relationships
     user = db.relationship('User', back_populates='tasks')
@@ -70,10 +71,12 @@ class UserTask(db.Model):
 
 class EventTask(db.Model):
     __tablename__ = 'event_task'
+    
+    event_task_id = db.Column('event_task_id', db.Integer(), primary_key=True)
 
     # Foreign + primary keys
-    event_id = db.Column('event_id', db.Integer(), db.ForeignKey('event.id'), primary_key=True)
-    task_id = db.Column('task_id', db.String(), db.ForeignKey('task.filename'), primary_key=True)
+    event_id = db.Column('event_id', db.Integer(), db.ForeignKey('event.id'))
+    task_id = db.Column('task_id', db.String(), db.ForeignKey('task.filename'))
 
     # Relationships
     event = db.relationship('Event', back_populates='tasks')

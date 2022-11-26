@@ -69,12 +69,14 @@ def check(token):
         response = jsonify(2)
         response.headers.add('Access-Control-Allow-Origin', '*')
         return response
-    
+    # print(f'{answer=}, {task.answer=}')
     if answer == task.answer:
         user.try_number = 1
-        tasks_done = UserTask.query.filter_by(user_id=user.token).all()
+        tasks_done = UserTask.query.with_entities(UserTask.task_id).filter_by(user_id=user.token).all()
         new_task = choice(Task.query.all())
-        while new_task.filename in tasks_done:
+        # print(new_task)
+        # print(tasks_done)
+        while (new_task.filename,) in tasks_done:
             new_task = choice(Task.query.all())
         user.active_task_id = new_task.filename
         user_task = UserTask(user_id=token, task_id=new_task.filename)
@@ -83,6 +85,7 @@ def check(token):
         response = jsonify(1)
         response.headers.add('Access-Control-Allow-Origin', '*')
         return response
+
 
     user.try_number += 1
     db.session.commit()
