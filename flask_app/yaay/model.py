@@ -9,6 +9,7 @@ class Event(db.Model):
     # Fields
     info = db.Column('info', db.String(), nullable=False)
     stage_amount = db.Column('stage_amount', db.Integer(), nullable=False)
+    max_tries = db.Column('max_tries', db.Integer(), default=3, nullable=False)
 
     # Relationships
     users = db.relationship('User')
@@ -32,7 +33,6 @@ class User(db.Model):
     is_received = db.Column('is_received', db.Boolean(), default=False)
     
     try_number = db.Column('try_number', db.Integer(), default=1)
-    max_tries = db.Column('tries_left', db.Integer(), default=3)
 
     # Relationships
     event = db.relationship('Event', back_populates='users')
@@ -81,3 +81,12 @@ class EventTask(db.Model):
     # Relationships
     event = db.relationship('Event', back_populates='tasks')
     task = db.relationship('Task', back_populates='events')
+
+
+class Survey(db.Model):
+    __tablename__ = 'survey'
+
+    user_token = db.Column('user_token', db.String(), db.ForeignKey('user.token'), primary_key=True)
+    gender = db.Column('gender', db.Integer(), nullable=False)
+    age = db.Column('age', db.Integer(), nullable=False)
+    education = db.Column('education', db.String(), nullable=False)
