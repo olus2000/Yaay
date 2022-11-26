@@ -2,16 +2,28 @@ from flask import Blueprint, current_app
 from flask.json import jsonify
 
 from yaay.db import db
-from yaay.model import Event
+from yaay.model import Event, User, Task, UserTask
 
+from secrets import token_bytes
+from random import choice
 
 bp = Blueprint('api', __name__, url_prefix='/api')
 
 
-@bp.route('/start')
-def start():
-    ''' nic nie bierze, daje token '''
-    return jsonify('ZajebistyToken2137')
+@bp.route('/start/<string:event_id>')
+def start(event_id):
+    ''' generates user token '''
+    token = str(token_bytes(16))
+    tasks = Task.query.all()
+    task_filename = choice(tasks).filename
+    user = User(token, event_id=event_id, active_task_id=task_filename)
+    user_task = UserTask(token, task_filename)
+    
+    db.session.add(user)
+    db.session.add(user_task)
+    response = jsonify(token)
+    response.headers.add('Access-Control-Allow-Origin', '*')
+    return response
 
 
 @bp.route('/task/<string:token>')
