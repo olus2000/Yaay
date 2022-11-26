@@ -87,6 +87,6 @@ class Survey(db.Model):
     __tablename__ = 'survey'
 
     user_token = db.Column('user_token', db.String(), db.ForeignKey('user.token'), primary_key=True)
-    gender = db.Column('gender', db.Integer(), nullable=False)
-    age = db.Column('age', db.Integer(), nullable=False)
+    gender = db.Column('gender', db.String(), nullable=False)
+    age = db.Column('age', db.String(), nullable=False)
     education = db.Column('education', db.String(), nullable=False)

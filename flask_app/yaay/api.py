@@ -103,19 +103,19 @@ def end(token):
     return create_response(event.info)
 
 
-@bp.route('/survey/<string:token>')
+@bp.route('/survey/<string:token>', methods=('POST',))
 def survey(token):
     survey = Survey.query.filter(Survey.user_token == token).one_or_none()
     if survey is None:
         survey = Survey(
                 user_token=token,
-                age=request.form['age'],
-                gender=request.form['gender'],
-                education=request.form['education'],
+                age=request.json['age'],
+                gender=request.json['gender'],
+                education=request.json['education'],
         )
-        db.session.add(new_survey)
+        db.session.add(survey)
     else:
-        survey.update(dict(request.form))
+        survey.update(dict(request.json))
 
     db.session.commit()
 
