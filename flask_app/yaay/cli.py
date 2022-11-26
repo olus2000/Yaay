@@ -18,6 +18,19 @@ def init_db(reset):
         db.drop_all()
 
     db.create_all()
+
+    #initializing database
+    db.session.add(Event(info="Hackathon Goldman Sachs", stage_amount=5))
+    db.session.add(Event(info="PW Work Trades", stage_amount=3))
+    db.session.add(Event(info="Studen Debil Day", stage_amount=2))
+    db.session.add(Task(filename="bit_sum.TXT", answer="2137", title="Bit Sum"))
+    db.session.add(Task(filename="fib.TXT", answer="alot", title="Fibonacci"))
+    db.session.add(Task(filename="median.TXT", answer="mediana", title="Mediana"))
+    db.session.add(EventTask(event_id=3, task_id="bit_sum.TXT"))
+    db.session.add(EventTask(event_id=3, task_id="fib.TXT"))
+    db.session.add(EventTask(event_id=3, task_id="median.TXT"))
+    db.session.commit()
+
     print('Database initialised.')
 
 
@@ -75,3 +88,17 @@ def add_task_to_event(filename, event_id):
     db.session.commit()
 
     print(f'Connected Event {task_to_event.event_id} with task {task_to_event.task_id}')
+
+
+@click.command('show')
+@click.option('--task', default=False)
+@click.option('--event', default=False)
+@click.option('--event-task', default=False)
+@with_appcontext
+def show(task, event, event_task):
+    if task:
+        print(Task.query.all())
+    if event:
+        print(Event.query.all())
+    if event_task:
+        print(EventTask.query.all())
