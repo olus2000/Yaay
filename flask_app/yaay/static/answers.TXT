@@ -1,0 +1,8 @@
+bit_sum 	-> 01010001110100110001001001
+employees 	-> 43900
+fib 		-> 68245678
+foundation 	-> 1869
+headquarter 	-> New York
+median 		-> 123987
+sector 		-> banking
+sum 		-> 56

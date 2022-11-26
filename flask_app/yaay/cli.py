@@ -92,9 +92,9 @@ def populate_database():
     db.session.add(Event(info="PW Job Fairs", stage_amount=3))
     db.session.add(Event(info="Women in Tech", stage_amount=3))
 
-    db.session.add(Task(filename="bit_sum.TXT", answer="2137", title="Bit Sum"))
+    db.session.add(Task(filename="bit_sum.TXT", answer="01010001110100110001001001", title="Bit Sum"))
     db.session.add(Task(filename="fib.TXT", answer="68245678", title="Fibonacci"))
-    db.session.add(Task(filename="median.TXT", answer="median", title="Median"))
+    db.session.add(Task(filename="median.TXT", answer="123987", title="Median"))
     db.session.add(Task(filename="employees.TXT", answer="43900", title="Employees"))
     db.session.add(Task(filename="foundation.TXT", answer="1869", title="Foundation"))
     db.session.add(Task(filename="sector.TXT", answer="banking", title="Sector"))
