@@ -110,4 +110,6 @@ def populate_database():
     db.session.add(EventTask(event_id=1, task_id="foundation.TXT"))
     db.session.add(EventTask(event_id=1, task_id="headquarter.TXT"))
 
+    print('Database populated')
+
     db.session.commit()

@@ -1,5 +1,6 @@
 from flask import Blueprint, current_app, request
 from flask.json import jsonify
+from sqlalchemy.sql.expression import exists
 
 from yaay.db import db
 from yaay.model import Event, User, Task, UserTask, EventTask, Survey
@@ -73,10 +74,10 @@ def check(token):
     if answer == task.answer:
         user.try_number = 1
         user.stage += 1
-        tasks_done = UserTask.query.with_entities(UserTask.task_id).filter_by(user_id=user.token).all()
-        new_task = choice(Task.query.all())
-        while (new_task.filename,) in tasks_done:
-            new_task = choice(Task.query.all())
+
+        viable_tasks = Task.query.join(EventTask).join(Event).filter(Event.id == event.id) \
+                .filter(~exists().where(UserTask.task_id == Task.filename)).all()
+        new_task = choice(viable_tasks)
         user.active_task_id = new_task.filename
         user_task = UserTask(user_id=token, task_id=new_task.filename)
         db.session.add(user_task)
