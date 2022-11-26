@@ -7,16 +7,18 @@ import {handleEndGet} from "../api/endApi";
 import {ErrorPage} from "../components/errorPage";
 import QRCode from "qrcode.react";
 import styled from "styled-components";
+import { Survey } from "../components/survey";
 
 
 const StyledQR = styled.div`
-margin: 25px;
+  position: absolute;
+  left: 250px;
   display: flex;
   flex-direction: column;
   align-items: center;
   
   .DownloadButton {
-    width: 100px;
+    width: 150px;
     height: 30px;
 
     border-radius: 5px;
@@ -70,6 +72,7 @@ export const EndPage = () => {
   if (data !== null)
   return(
       <PageWrapper>
+        <Survey />
         <Header title={'Congratulations!'} />
         <Task content={data} />
         <Task content={explain} />
