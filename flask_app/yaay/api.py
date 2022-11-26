@@ -65,20 +65,19 @@ def check(token):
     num_of_tasks = Event.query.filter_by(id=user.event_id).first().stage_amount
     answer = list(request.form.keys())[0]
     
-    
+    # print(f'{user.stage=}, {num_of_tasks=}')
     if answer == task.answer and user.stage == num_of_tasks:
         user.is_finished = True
         db.session.commit()
         response = jsonify(2)
         response.headers.add('Access-Control-Allow-Origin', '*')
         return response
-    # print(f'{answer=}, {task.answer=}')
+
     if answer == task.answer:
         user.try_number = 1
+        user.stage += 1
         tasks_done = UserTask.query.with_entities(UserTask.task_id).filter_by(user_id=user.token).all()
         new_task = choice(Task.query.all())
-        # print(new_task)
-        # print(tasks_done)
         while (new_task.filename,) in tasks_done:
             new_task = choice(Task.query.all())
         user.active_task_id = new_task.filename
