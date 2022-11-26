@@ -21,10 +21,7 @@ def start(event_id):
     tasks = Task.query.all()
     task_filename = choice(tasks).filename
     if not Event.query.filter_by(id=event_id).first():
-        print('h..hi?')
-        response = jsonify('wrong event')
-        response.headers.add('Access-Control-Allow-Origin', '*')
-        return response
+        return create_response('wrong event')
     user = User(token=token, event_id=event_id, active_task_id=task_filename)
     user_task = UserTask(user_id=token, task_id=task_filename)
     
