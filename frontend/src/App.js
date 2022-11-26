@@ -31,6 +31,10 @@ const router = createBrowserRouter([
   {
     path: '/fail',
     element: <FailPage />
+  },
+  {
+    path: '*',
+    element: <ErrorPage />
   }
 ]);
 

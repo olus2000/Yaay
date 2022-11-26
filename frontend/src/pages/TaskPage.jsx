@@ -42,12 +42,29 @@ export const TaskPage = () => {
     await handleTaskCheck(ans, userId, setResult)
     document.location.reload()
   }
+  if (data === null)
+    return(
+        <div />
+    )
+
+
   if (data === 'ERROR')
     return(
         <ErrorPage />
     )
 
-  if (data !== null)
+
+  if (data.try_num > data.max_tries)
+    return(
+        <Navigate to={`/fail`} />
+    )
+
+
+  if (data.is_finished)
+    return (
+        <Navigate to={`/result/${userId}`} />
+    )
+
     return(
         <PageWrapper>
           <Header title={data.title} />
@@ -58,11 +75,7 @@ export const TaskPage = () => {
             <AnswerInput onChange = {handleChange} />
             <AnswerButton onClick={handleSubmitAnswer} />
           </AnswerContainer>
-          {data.try_num > data.max_tries && <Navigate to={`/fail`} />}
         </PageWrapper>
     )
 
-  return(
-      <div />
-  )
 }

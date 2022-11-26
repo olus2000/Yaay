@@ -4,6 +4,7 @@ import {PageWrapper} from "../utils/PageWrapper";
 import {Header} from "../components/header";
 import {Task} from "../components/task";
 import {handleEndGet} from "../api/endApi";
+import {ErrorPage} from "../components/errorPage";
 
 
 export const EndPage = () => {
@@ -15,6 +16,10 @@ export const EndPage = () => {
   })
 
   const prompt = 'You finished zadanka and taski';
+  if (data === 'error')
+    return(
+        <ErrorPage />
+    )
 
   if (data !== null)
   return(

@@ -51,7 +51,8 @@ def task(token):
         'try_num': user.try_number,
         'max_tries': user.max_tries,
         'task_number': user.stage,
-        'max_task_number': num_of_tasks
+        'max_task_number': num_of_tasks,
+        'is_finished': user.is_finished
     })
     response.headers.add('Access-Control-Allow-Origin', '*')
     return response
@@ -66,6 +67,8 @@ def check(token):
     
     
     if answer == task.answer and user.stage == num_of_tasks:
+        user.is_finished = True
+        db.session.commit()
         response = jsonify(2)
         response.headers.add('Access-Control-Allow-Origin', '*')
         return response
@@ -100,4 +103,12 @@ def check(token):
 @bp.route('/end/<string:token>')
 def end(token):
     ''' bierze token, daje content eventu i coś tam jeszcze nie wiem w sumie '''
-    return jsonify('Przyjdź na targi pracy na PW żeby odebrać nagrodę!!!!!!!!!!')
+    user = User.query.filter_by(token=token).first()
+    if not user.is_finished:
+        response = jsonify('error')
+        response.headers.add('Access-Control-Allow-Origin', '*')
+        return response
+    event = Event.query.filter_by(id=user.event_id).first()
+    response = jsonify(event.info)
+    response.headers.add('Access-Control-Allow-Origin', '*')
+    return response
