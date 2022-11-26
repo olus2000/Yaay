@@ -119,3 +119,5 @@ def survey(token):
 
     db.session.commit()
 
+    return create_response(1)
+
