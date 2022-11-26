@@ -2,7 +2,7 @@ from flask import Blueprint, current_app, request
 from flask.json import jsonify
 
 from yaay.db import db
-from yaay.model import Event, User, Task, UserTask, EventTask
+from yaay.model import Event, User, Task, UserTask, EventTask, Survey
 
 from secrets import token_hex
 from random import choice
@@ -53,11 +53,12 @@ def task(token):
     })
 
 
-@bp.route('/check/<string:token>', methods=['POST'])
+@bp.route('/check/<string:token>', methods=('POST',))
 def check(token):
     user = User.query.filter_by(token=token).first()
     task = Task.query.filter_by(filename=user.active_task_id).first()
     event = Event.query.filter_by(id=user.event_id).first()
+    print(dict(request.form))
     answer = list(request.form.keys())[0]
 
     if user.try_number > event.max_tries:
@@ -85,12 +86,11 @@ def check(token):
 
     user.try_number += 1
     db.session.commit()
-    if user.try_number > user.max_tries:
+    if user.try_number > event.max_tries:
         return create_response(0)
     
     return create_response(1)
     
-
 
 @bp.route('/end/<string:token>')
 def end(token):
@@ -100,3 +100,21 @@ def end(token):
         return create_response('error')
     event = Event.query.filter_by(id=user.event_id).first()
     return create_response(event.info)
+
+
+@bp.route('/survey/<string:token>')
+def survey(token):
+    survey = Survey.query.filter(Survey.user_token == token).one_or_none()
+    if survey is None:
+        survey = Survey(
+                user_token=token,
+                age=request.form['age'],
+                gender=request.form['gender'],
+                education=request.form['education'],
+        )
+        db.session.add(new_survey)
+    else:
+        survey.update(dict(request.form))
+
+    db.session.commit()
+
