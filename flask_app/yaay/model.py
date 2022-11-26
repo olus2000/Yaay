@@ -4,7 +4,7 @@ from yaay.db import db
 class Event(db.Model):
     __tablename__ = 'event'
 
-    id = db.Column('id', db.BigInteger(), primary_key=True)
+    id = db.Column('id', db.Integer(), primary_key=True)
 
     # Fields
     info = db.Column('info', db.String(), nullable=False)
@@ -21,7 +21,7 @@ class User(db.Model):
     token = db.Column('token', db.String(), primary_key=True)
 
     # Foreign keys
-    event_id = db.Column('event_id', db.BigInteger(),
+    event_id = db.Column('event_id', db.Integer(),
                          db.ForeignKey('event.id'), nullable=False)
     active_task_id = db.Column('active_task_id', db.String(
     ), db.ForeignKey('task.filename'), nullable=False)
@@ -69,7 +69,7 @@ class EventTask(db.Model):
     __tablename__ = 'event_task'
 
     # Foreign + primary keys
-    event_id = db.Column('event_id', db.BigInteger(), db.ForeignKey('event.id'), primary_key=True)
+    event_id = db.Column('event_id', db.Integer(), db.ForeignKey('event.id'), primary_key=True)
     task_id = db.Column('task_id', db.String(), db.ForeignKey('task.filename'), primary_key=True)
 
     # Relationships
