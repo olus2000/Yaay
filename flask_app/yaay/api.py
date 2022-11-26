@@ -1,4 +1,4 @@
-from flask import Blueprint, current_app
+from flask import Blueprint, current_app, request
 from flask.json import jsonify
 
 from yaay.db import db
@@ -40,18 +40,51 @@ def task(token):
         'task': question,
         'title': task.title,
         'try_num': user.try_number,
-        'max_tries': user.tries_max_triesleft,
-        'task_number': user.task,
+        'max_tries': user.max_tries,
+        'task_number': user.stage,
         'max_task_number': num_of_tasks
     })
     response.headers.add('Access-Control-Allow-Origin', '*')
     return response
 
 
-@bp.route('/check/<string:token>')
+@bp.route('/check/<string:token>', methods=['POST'])
 def check(token):
-    ''' dostaje token i rozwiązanie zwraca 0,1,2, update'uje zadanko '''
-    return jsonify(1)
+    user = User.query.filter_by(token=token).first()
+    task = Task.query.filter_by(filename=user.active_task_id).first()
+    num_of_tasks = Event.query.filter_by(id=user.event_id).first().stage_amount
+    answer = list(request.form.keys())[0]
+    
+    
+    if answer == task.answer and user.stage == num_of_tasks:
+        response = jsonify(2)
+        response.headers.add('Access-Control-Allow-Origin', '*')
+        return response
+    
+    if answer == task.answer:
+        user.try_number = 1
+        tasks_done = UserTask.query.filter_by(user_id=user.token).all()
+        new_task = choice(Task.query.all())
+        while new_task.filename in tasks_done:
+            new_task = choice(Task.query.all())
+        user.active_task_id = new_task.filename
+        user_task = UserTask(user_id=token, task_id=new_task.filename)
+        db.session.add(user_task)
+        db.session.commit()
+        response = jsonify(1)
+        response.headers.add('Access-Control-Allow-Origin', '*')
+        return response
+
+    user.try_number += 1
+    if user.try_number > user.max_tries:
+        response = jsonify(0)
+        response.headers.add('Access-Control-Allow-Origin', '*')
+        return response
+    
+    response = jsonify(1)
+    response.headers.add('Access-Control-Allow-Origin', '*')
+    return response
+    
 
 
 @bp.route('/end/<string:token>')
