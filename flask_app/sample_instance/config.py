@@ -1,4 +1,4 @@
 SECRET_KEY = 'change this value'
 
 SQLALCHEMY_TRACK_MODIFICATIONS = False
-SQLALCHEMY_DATABASE_URI = 'sqlite:////{instance}/db.sqlite3'
+SQLALCHEMY_DATABASE_URI = 'sqlite:///{instance}\db.sqlite3'
