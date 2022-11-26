@@ -33,7 +33,7 @@ class User(db.Model):
 
     # Relationships
     event = db.relationship('Event', back_populates='users')
-    active_task = db.relationship('Task', back_populates='users')
+    active_task = db.relationship('Task', back_populates='user')
     tasks = db.relationship('UserTask')
 
 
@@ -47,6 +47,7 @@ class Task(db.Model):
     title = db.Column('title', db.String(), nullable=False)
 
     # Relationships
+    user = db.relationship("User")
     users = db.relationship('UserTask')
     events = db.relationship('EventTask')
 
