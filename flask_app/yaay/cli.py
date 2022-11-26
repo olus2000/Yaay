@@ -19,8 +19,9 @@ def init_db(reset):
 
     db.create_all()
 
-    #initializing database
-    initialize_database()
+    if reset:
+        #populating database
+        populate_database()
 
     print('Database initialised.')
 
@@ -86,7 +87,7 @@ def show(task, event, event_task):
     if event_task:
         print(EventTask.query.all())
 
-def initialize_database():
+def populate_database():
     db.session.add(Event(info="Hackathon Goldman Sachs", stage_amount=3))
     db.session.add(Event(info="PW Job Fairs", stage_amount=3))
     db.session.add(Event(info="Women in Tech", stage_amount=3))
