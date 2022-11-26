@@ -3,17 +3,28 @@ import { useParams } from "react-router-dom";
 import {PageWrapper} from "../utils/PageWrapper";
 import {Header} from "../components/header";
 import {Task} from "../components/task";
+import {handleEndGet} from "../api/endApi";
 
 
 export const EndPage = () => {
+  const [data, setData] = React.useState(null)
+  const userId = useParams().id
 
+  React.useEffect(() => {
+    data === null && handleEndGet(setData, userId)
+  })
 
   const prompt = 'You finished zadanka and taski';
-  const userId = useParams().id;
+
+  if (data !== null)
   return(
       <PageWrapper>
         <Header title={'Congratulations!'} />
-        <Task content={prompt + ' ' + userId} />
+        <Task content={data} />
       </PageWrapper>
+  )
+
+  return(
+      <div />
   )
 }

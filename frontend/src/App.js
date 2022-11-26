@@ -8,12 +8,13 @@ import {
 import { EndPage } from "./pages/EndPage";
 import { StartPage } from "./pages/StartPage";
 import { TaskPage } from "./pages/TaskPage";
+import { FailPage } from "./pages/FailPage";
 import {ErrorPage} from "./components/errorPage";
 
 
 const router = createBrowserRouter([
   {
-    path: "/",
+    path: "/:eventId",
     element: <StartPage />,
     errorElement: <ErrorPage />
   },
@@ -26,6 +27,10 @@ const router = createBrowserRouter([
     path: '/result/:id',
     element: <EndPage />,
     errorElement: <ErrorPage />
+  },
+  {
+    path: '/fail',
+    element: <FailPage />
   }
 ]);
 
