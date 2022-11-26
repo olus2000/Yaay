@@ -48,6 +48,7 @@ def create_app(test_config=None):
     @app.after_request
     def handle_CORS(response):
         response.headers['Access-Control-Allow-Origin'] = '*'
+        return response
 
     return app
 
