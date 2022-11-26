@@ -24,6 +24,7 @@ def init_db(reset):
 @click.command('add-event')
 @click.option('--info', required=True)
 @click.option('--stage-amount', required=True, type=int)
+@with_appcontext
 def add_event(info, stage_amount):
     db.session.add(Event(info=info, stage_amount=stage_amount))
     db.session.commit()
@@ -33,13 +34,21 @@ def add_event(info, stage_amount):
 
 # Add a task
 @click.command('add-task')
-@click.option('--add-option-here')
-def add_task(stuff):
-    ...
+@click.option('--filename')
+@click.option('--title')
+@click.option('--answer')
+@with_appcontext
+def add_task(filename, title, answer):
+    task = Task(filename=filename, title=title, answer=answer)
+    db.session.add(task)
+    db.session.commit()
+
+    print(f'Created task with title {task.title}')
 
 
 # Add task to event
 @click.command('add-task-to-event')
+# @click.option('--')
 def add_task_to_event(stuff):
     ...
-    
+
