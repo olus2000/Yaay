@@ -7,7 +7,7 @@ from flask_sqlalchemy import SQLAlchemy
 
 from yaay import api
 from yaay.db import db
-from yaay.cli import init_db, add_event, add_task, add_task_to_event
+from yaay.cli import init_db, add_event, add_task, add_task_to_event, show
 
 
 def create_app(test_config=None):
@@ -43,6 +43,7 @@ def create_app(test_config=None):
     app.cli.add_command(add_event)
     app.cli.add_command(add_task)
     app.cli.add_command(add_task_to_event)
+    app.cli.add_command(show)
 
     return app
 
