@@ -10,9 +10,14 @@ import { StartPage } from "./pages/StartPage";
 import { TaskPage } from "./pages/TaskPage";
 import { FailPage } from "./pages/FailPage";
 import {ErrorPage} from "./components/errorPage";
+import {WelcomePage} from "./pages/WelcomePage";
 
 
 const router = createBrowserRouter([
+  {
+    path: '/',
+    element: <WelcomePage />
+  },
   {
     path: "/:eventId",
     element: <StartPage />,

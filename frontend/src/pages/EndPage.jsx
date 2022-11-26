@@ -45,7 +45,9 @@ export const EndPage = () => {
     data === null && handleEndGet(setData, userId)
   })
 
-  const prompt = 'Download the QR code below and use it at the Job Fair to get your prize!';
+  const explain = "You completed the Goldman Sachs secret challenge!"
+
+  const prompt = "Download the QR code below and use it at the Job Fair to get your prize!";
   if (data === 'error')
     return(
         <ErrorPage />
@@ -70,6 +72,8 @@ export const EndPage = () => {
       <PageWrapper>
         <Header title={'Congratulations!'} />
         <Task content={data} />
+        <Task content={explain} />
+        <a href={'https://www.goldmansachs.com'} style={{fontSize: 14, marginLeft: 20}} target={'_blank'}> Lear about us here </a>
         <Task content={prompt} />
         <StyledQR>
         <QRCode
