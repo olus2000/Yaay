@@ -30,6 +30,10 @@ def start(event_id):
 @bp.route('/task/<string:token>')
 def task(token):
     user = User.query.filter_by(token=token).first()
+    if not user:
+        response = jsonify('ERROR')
+        response.headers.add('Access-Control-Allow-Origin', '*')
+        return response
     task = Task.query.filter_by(filename=user.active_task_id).first()
     with open('yaay/static/tasks/' + task.filename) as f:
         question = f.readlines()
